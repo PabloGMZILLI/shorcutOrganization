@@ -1,11 +1,13 @@
-var folders = localStorage.getItem('saveShortcuts') || []
-// console.log('======>>> folders: ', JSON.parse(folders))
-if (folders !== [] ) importShortcuts()
+var session = []
+
+session = localStorage.getItem('saveShortcuts') || []
+
+if (session.length > 0 ) importShortcuts()
+console.log('======>>> length: ', session.length)
 
 function toggleShortcutOptions() {
     this.nextElementSibling.classList.toggle('show');
 }
-
 
 $('.btn-new').on('click', toggleOptions);
 function createNewButton () {
@@ -24,7 +26,6 @@ function toggleOptions() {
         $('.btn-more').remove()
         this.innerText = "+"
     }
-
 }
 
 function createNewLink () {
@@ -39,15 +40,13 @@ function createNewLink () {
 
 function importShortcuts () {
     // Retrieve the object from storage
-    let parseStorage = JSON.parse(folders)
+    let parseStorage = JSON.parse(session)
     let allNames = []
     let allUrls = []
     for (let i=0; i < parseStorage.length; i++){
-
         allNames = []
         allUrls = []
         for (let b=0; b < parseStorage[i].folderContent.length; b++){
-            
             allNames.push(parseStorage[i].folderContent[b].urlName)
             allUrls.push(parseStorage[i].folderContent[b].url)
         }
@@ -71,19 +70,7 @@ function appendDiv (folderName, contentNamesArray, contentUrlsArray)   {
         </div>`).insertBefore($('.newShortcutFolder'))
 }
 
-function saveNewShortcut () {
-    let folderName = $(".input-main")[0].value
-    let allNames = $( ".input-name" ).map(function(){return this.value})
-    let allUrls = $( ".input-url" ).map(function(){return this.value})
-
-    appendDiv(folderName, allNames, allUrls )
-    let folder = { "folderName": folderName, "folderContent": createDropContent() }
-    console.log('======>>> folders: ', folders)
-    JSON.parse(folders).push(folder)
-
-    localStorage.setItem('saveShortcuts', JSON.stringify(folders))
-
-    
+function exportShortcuts () {
 
     // ====== Download ======
     // let text = $(".userShortcut");
@@ -94,7 +81,26 @@ function saveNewShortcut () {
     // this.href = "data:text/plain;charset=UTF-8," + encodeURIComponent(allItems);
     // =======================
 
+}
 
+function saveNewShortcut () {
+    let folderName = $(".input-main")[0].value
+    let allNames = $( ".input-name" ).map(function(){return this.value})
+    let allUrls = $( ".input-url" ).map(function(){return this.value})
+
+    // create json object to save in local storage
+    console.log('======>>> session: ', session)
+    console.log('======>>> type session: ', typeof session)
+    // console.log('======>>> type session: ', JSON.parse(session))
+    session.push({ "folderName": folderName, "folderContent": createDropContent() })
+
+    // save json in local storage
+    localStorage.setItem('saveShortcuts', JSON.stringify(session))
+
+    // Create div with new links
+    appendDiv(folderName, allNames, allUrls )
+
+    // adjust buttons in layout
     $('.inputsAdded').remove();
     $('input').map(function(){ this.value = "" })
     $('.add-shortcut-folder-content').removeClass('show');
@@ -146,6 +152,7 @@ window.onload = function () {
 }
 //https://codigosimples.net/2016/04/25/ler-um-arquivo-local-usando-html5-e-javascript/
 
+// buttons actions
 $(document.body).on('click', '.dropbtn', toggleShortcutOptions);
 $(document.body).on('click', '.btn-save', saveNewShortcut);
 $(document.body).on('click', '.button-rm', removeLinksAdded);
