@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>New Shortcut Folder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<!-- Top navigation -->
+<div class="topnav">
+
+  <!-- Centered link -->
+  <div class="topnav-centered">
+    <a href="index.html" class="active">Home</a>
+  </div>
+  
+  <!-- Left-aligned links (default) -->
+  <a href="#news">News</a>
+  
+  <!-- Right-aligned links -->
+  <div class="topnav-right">
+    <a href="#search">New Shortcut Folder</a>
+  </div>
+  
+</div>
+
+<div class="real-body">
+    <h2>Add New Shortcut Folder</h2>
+    <div class="newShortcutFolder">
+        <div class="add-shortcut-folder-content">
+            <input class="input input-main" placeholder="Folder Name">
+            <input class="input input-secondary" placeholder="Page Name">
+            <input class="input input-secondary" placeholder="Page Link">
+            
+        </div>
+        <button class="btn btn-new">+</button>
+        <button class="btn btn-save">Save</button>
+        
+    </div>
+</div>
+<script>
+    $('.btn-new').on('click', toggleOptions);
+    
+    function toggleOptions() {
+        this.previousElementSibling.classList.toggle('show');
+        this.nextElementSibling.classList.toggle('show');
+        let control = 1;
+        if (control == 1){
+            if (this.previousElementSibling.classList.contains("show")){
+                this.innerText = "-"
+            } else {
+                this.innerText = "+"
+            }
+        }
+    }
+</script>
+</body>
+</html>

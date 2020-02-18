@@ -1,0 +1,9 @@
+<div class="userShortcut">
+            <button class="dropbtn">Ambientes Merge</button>
+            <div class="shortcut-content" id="shortcutDropdown">
+                <a target="_blank" href="http://jenkins.natura.com.br/job/Aplicacoes/job/naturacf/job/Latam/job/Frontend/job/Argentina/job/naturacf-fe/job/dev1-latam/">Front End</a>
+                <a target="_blank" href="http://jenkins.natura.com.br/job/Aplicacoes/job/naturacf/job/cms/job/naturacf-cms/job/hml-latam/">CMS</a>
+                <a target="_blank" href="http://jenkins.natura.com.br/job/Aplicacoes/job/naturacf/job/Latam/job/Stitching/job/naturacf-api/job/dev1-latam/">API</a>
+                <a target="_blank" href="http://jenkins.natura.com.br/job/Aplicacoes/job/naturacf/job/Latam/job/Graphql/job/naturacf-graphql/job/dev1-latam/">Graphql</a>
+            </div>
+        </div>
