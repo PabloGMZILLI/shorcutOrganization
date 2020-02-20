@@ -179,3 +179,26 @@ body {
 .show {
     display: block;
 }
+.btn-import {
+    background-color: rgb(68, 66, 66);
+    color: white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    border: white 2px solid;
+    position: absolute;
+    right: 8em;
+    top: 5em;
+}
+
+.btn-export {
+    background-color: rgb(68, 66, 66);
+    color: white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    border: white 2px solid;
+    position: absolute;
+    right: 2em;
+    top: 5em;
+}

@@ -26,12 +26,10 @@
 </div>
 
 <div class="real-body">
-    <h2>Jenkins Shortcut</h2>
-    <div class="import">
-        Import environments
-        <input type="file" id="txtfiletoread" />
-    </div>
-    <a class="btn btn-import">Import</a>
+  <h2>Jenkins Shortcut</h2>
+  <input type="file" id="filetoread" style='visibility:hidden' />
+  <button class='btn btn-import' onclick="$('#filetoread').click()">Import</button>
+  <button class='btn btn-export' id="filetodownload" download="shortcuts.json" >Export</button>
     <div class="newShortcutFolder">
         <div class="add-shortcut-folder-content">
             <input class="input input-main" placeholder="Folder Name">
@@ -39,7 +37,7 @@
             <input class="input input-url input-secondary orig" placeholder="Page Link">   
         </div>
         <button class="btn btn-new">+</button>
-        <a class="btn btn-save" href="#" download="shortcuts.txt">Save</a> 
+        <a class="btn btn-save" href="#" >Save</a> 
     </div>
     
 </div>

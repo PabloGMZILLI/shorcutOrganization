@@ -1,9 +1,94 @@
-var session = []
+var session = localStorage.getItem('saveShortcuts') || []
+var sessionParsed = []
 
-session = localStorage.getItem('saveShortcuts') || []
+if (session.length > 0 ) { // transform session to object
+    sessionParsed = JSON.parse(session)
+    importShortcuts(sessionParsed)
+}
 
-if (session.length > 0 ) importShortcuts()
-console.log('======>>> length: ', session.length)
+// Retrieve the object from storage
+function importShortcuts (data) {
+    let allNames = []
+    let allUrls = []
+    for (let i=0; i < data.length; i++){
+        allNames = []
+        allUrls = []
+        for (let b=0; b < data[i].folderContent.length; b++){
+            allNames.push(data[i].folderContent[b].urlName)
+            allUrls.push(data[i].folderContent[b].url)
+        }
+        appendDiv(data[i].folderName, allNames, allUrls)
+        
+    }
+
+    saveSession()
+}
+
+{/* <input class="input input-main" placeholder="Folder Name">
+<input class="input input-name input-secondary" placeholder="Page Name">
+<input class="input input-url input-secondary orig" placeholder="Page Link">    */}
+function saveSession () {
+    let folderName = $(".input-main")[0].value
+    let allNames = $( ".input-name" ).map(function(){return this.value})
+    let allUrls = $( ".input-url" ).map(function(){return this.value})
+    let contentObjects = []
+
+    for (let i=0; i < allNames.length; i++){
+        contentObjects.push({"url" : allUrls[i], "urlName": allNames[i]})
+    }   
+    sessionParsed.push({ "folderName": folderName, "folderContent": contentObjects })
+
+    // save json in local storage
+    localStorage.setItem('saveShortcuts', JSON.stringify(sessionParsed))
+}
+
+function exportToJsonFile() {
+
+    let dataStr = JSON.stringify(sessionParsed);
+    let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+    let exportFileDefaultName = 'shortcuts.json';
+
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    linkElement.remove();
+
+}
+
+function appendDiv (folderName, contentNamesArray, contentUrlsArray)   {
+    let contentConstructor = []
+    for (let i=0; i < contentNamesArray.length; i++){
+        contentConstructor = contentConstructor + `<a target="_blank" href="${contentUrlsArray[i]}">${ contentNamesArray[i]}</a>`
+    }
+
+    $(
+        `<div class="userShortcut">
+            <button class="dropbtn">${folderName}</button>
+            <div class="shortcut-content" id="shortcutDropdown">
+                ${contentConstructor}
+            </div>
+        </div>`).insertBefore($('.newShortcutFolder'))
+}
+
+function saveNewShortcut () {
+    let folderName = $(".input-main")[0].value
+    let allNames = $( ".input-name" ).map(function(){return this.value})
+    let allUrls = $( ".input-url" ).map(function(){return this.value})
+
+    appendDiv( )
+    saveSession(folderName, allNames, allUrls )
+
+    // adjust buttons in layout
+    $('.inputsAdded').remove();
+    $('input').map(function(){ this.value = "" })
+    $('.add-shortcut-folder-content').removeClass('show');
+    $('.btn-save').removeClass('show');
+    $('.btn-more').remove()
+    $('.btn-new')[0].innerText = '+'
+
+}
 
 function toggleShortcutOptions() {
     this.nextElementSibling.classList.toggle('show');
@@ -37,90 +122,6 @@ function createNewLink () {
         </div>`
     )
 }
-
-function importShortcuts () {
-    // Retrieve the object from storage
-    let parseStorage = JSON.parse(session)
-    let allNames = []
-    let allUrls = []
-    for (let i=0; i < parseStorage.length; i++){
-        allNames = []
-        allUrls = []
-        for (let b=0; b < parseStorage[i].folderContent.length; b++){
-            allNames.push(parseStorage[i].folderContent[b].urlName)
-            allUrls.push(parseStorage[i].folderContent[b].url)
-        }
-        appendDiv(parseStorage[i].folderName, allNames, allUrls)
-    }
-
-}
-
-function appendDiv (folderName, contentNamesArray, contentUrlsArray)   {
-    let contentConstructor = []
-    for (let i=0; i < contentNamesArray.length; i++){
-        contentConstructor = contentConstructor + `<a target="_blank" href="${contentNamesArray[i]}">${ contentUrlsArray[i]}</a>`
-    }
-
-    $(
-        `<div class="userShortcut">
-            <button class="dropbtn">${folderName}</button>
-            <div class="shortcut-content" id="shortcutDropdown">
-                ${contentConstructor}
-            </div>
-        </div>`).insertBefore($('.newShortcutFolder'))
-}
-
-function exportShortcuts () {
-
-    // ====== Download ======
-    // let text = $(".userShortcut");
-    // let allItems = '';
-    // text.each(function (elem) {
-    //     allItems += `<div class="userShortcut">${$(this).html()}</div>`;
-    // });
-    // this.href = "data:text/plain;charset=UTF-8," + encodeURIComponent(allItems);
-    // =======================
-
-}
-
-function saveNewShortcut () {
-    let folderName = $(".input-main")[0].value
-    let allNames = $( ".input-name" ).map(function(){return this.value})
-    let allUrls = $( ".input-url" ).map(function(){return this.value})
-
-    // create json object to save in local storage
-    console.log('======>>> session: ', session)
-    console.log('======>>> type session: ', typeof session)
-    // console.log('======>>> type session: ', JSON.parse(session))
-    session.push({ "folderName": folderName, "folderContent": createDropContent() })
-
-    // save json in local storage
-    localStorage.setItem('saveShortcuts', JSON.stringify(session))
-
-    // Create div with new links
-    appendDiv(folderName, allNames, allUrls )
-
-    // adjust buttons in layout
-    $('.inputsAdded').remove();
-    $('input').map(function(){ this.value = "" })
-    $('.add-shortcut-folder-content').removeClass('show');
-    $('.btn-save').removeClass('show');
-    $('.btn-more').remove()
-    $('.btn-new')[0].innerText = '+'
-
-}
-
-function createDropContent () {
-    let allNames = $( ".input-name" ).map(function(){return this.value})
-    let allUrls = $( ".input-url" ).map(function(){return this.value})
-    let add = []
-    for (let i=0; i < allNames.length; i++){
-        add.push({"url" : allUrls[i], "urlName": allNames[i]})
-    }   
-
-    return add
-}
-
 function removeLinksAdded () {
     $(this).parent().remove(); 
 }
@@ -128,21 +129,20 @@ function removeLinksAdded () {
 window.onload = function () {
     
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-        var fileSelected = document.getElementById('txtfiletoread');
+        var fileSelected = $('#filetoread')[0];
         fileSelected.addEventListener('change', function (e) {
-            var fileExtension = /text.*/;
+            var fileExtension = /json.*/;
             var fileTobeRead = fileSelected.files[0];
             if (fileTobeRead.type.match(fileExtension)) {
                 var fileReader = new FileReader();
                 fileReader.onload = function (e) {
-                    let fileContents = $('<div class="container"></div>').insertBefore($('.newShortcutFolder'))
-
-                    fileContents[0].innerHTML += fileReader.result;
+                    let parsedResult = JSON.parse(fileReader.result)
+                    importShortcuts(parsedResult)
                 }
                 fileReader.readAsText(fileTobeRead);
             }
             else {
-                alert("Por favor selecione arquivo texto");
+                alert("Apenas arquivos json suportados");
             }
         }, false);
     }
@@ -156,4 +156,4 @@ window.onload = function () {
 $(document.body).on('click', '.dropbtn', toggleShortcutOptions);
 $(document.body).on('click', '.btn-save', saveNewShortcut);
 $(document.body).on('click', '.button-rm', removeLinksAdded);
-$(document.body).on('click', '.btn-import', importShortcuts);
+$(document.body).on('click', '.btn-export', exportToJsonFile);
