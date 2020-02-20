@@ -27,12 +27,15 @@ function importShortcuts (data) {
 {/* <input class="input input-main" placeholder="Folder Name">
 <input class="input input-name input-secondary" placeholder="Page Name">
 <input class="input input-url input-secondary orig" placeholder="Page Link">    */}
-function saveSession () {
-    let folderName = $(".input-main")[0].value
-    let allNames = $( ".input-name" ).map(function(){return this.value})
-    let allUrls = $( ".input-url" ).map(function(){return this.value})
+function saveSession (folderName, allNames, allUrls) {
+    folderName ? folderName : folderName = $( ".foldername" ).map(function(){return this.innerText})
+    allNames ? allNames : allNames = $( ".shortcutContentLink" ).map(function(){return this.innerText})
+    allUrls ? allUrls :  allUrls = $( ".shortcutContentLink" ).map(function(){return this.href})
     let contentObjects = []
 
+console.log('======>>> folderName: ', folderName)
+    console.log('======>>> allNames: ', allNames)
+    console.log('======>>> allUrls: ', allUrls)
     for (let i=0; i < allNames.length; i++){
         contentObjects.push({"url" : allUrls[i], "urlName": allNames[i]})
     }   
@@ -60,12 +63,12 @@ function exportToJsonFile() {
 function appendDiv (folderName, contentNamesArray, contentUrlsArray)   {
     let contentConstructor = []
     for (let i=0; i < contentNamesArray.length; i++){
-        contentConstructor = contentConstructor + `<a target="_blank" href="${contentUrlsArray[i]}">${ contentNamesArray[i]}</a>`
+        contentConstructor = contentConstructor + `<a target="_blank" class="shortcutContentLink" href="${contentUrlsArray[i]}">${ contentNamesArray[i]}</a>`
     }
 
     $(
         `<div class="userShortcut">
-            <button class="dropbtn">${folderName}</button>
+            <button class="dropbtn foldername">${folderName}</button>
             <div class="shortcut-content" id="shortcutDropdown">
                 ${contentConstructor}
             </div>
@@ -77,8 +80,8 @@ function saveNewShortcut () {
     let allNames = $( ".input-name" ).map(function(){return this.value})
     let allUrls = $( ".input-url" ).map(function(){return this.value})
 
-    appendDiv( )
-    saveSession(folderName, allNames, allUrls )
+    appendDiv(folderName, allNames, allUrls)
+    saveSession(folderName, allNames, allUrls)
 
     // adjust buttons in layout
     $('.inputsAdded').remove();
