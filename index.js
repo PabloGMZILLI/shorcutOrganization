@@ -3,6 +3,8 @@ var sessionParsed = []
 
 if (session.length > 0 ) { // transform session to object
     sessionParsed = JSON.parse(session)
+    // import shortcut from session
+    console.log('======>>> sessionParsed: ', sessionParsed)
     importShortcuts(sessionParsed)
 }
 
@@ -21,25 +23,32 @@ function importShortcuts (data) {
         
     }
 
-    saveSession()
+    // saveSession()
+
 }
 
 {/* <input class="input input-main" placeholder="Folder Name">
 <input class="input input-name input-secondary" placeholder="Page Name">
 <input class="input input-url input-secondary orig" placeholder="Page Link">    */}
-function saveSession (folderName, allNames, allUrls) {
-    folderName ? folderName : folderName = $( ".foldername" ).map(function(){return this.innerText})
-    allNames ? allNames : allNames = $( ".shortcutContentLink" ).map(function(){return this.innerText})
-    allUrls ? allUrls :  allUrls = $( ".shortcutContentLink" ).map(function(){return this.href})
+function saveSession () {
+    let allFoldersName = $( ".foldername" ).map(function(){return this.innerText})
+    let allNames = $( ".shortcutContentLink" ).map(function(){return this.innerText})
+    let allUrls = $( ".shortcutContentLink" ).map(function(){return this.href})
     let contentObjects = []
-
-console.log('======>>> folderName: ', folderName)
+    let sessionParsed = []
+    console.log('======>>> folderName: ', allFoldersName)
     console.log('======>>> allNames: ', allNames)
     console.log('======>>> allUrls: ', allUrls)
+    console.log('======>>> sessionParsed: ', sessionParsed)
+    console.log('======>>> sessionParsed2: ', sessionParsed)
     for (let i=0; i < allNames.length; i++){
         contentObjects.push({"url" : allUrls[i], "urlName": allNames[i]})
-    }   
-    sessionParsed.push({ "folderName": folderName, "folderContent": contentObjects })
+    }
+    for (let i=0; i < allFoldersName.length; i++){
+        sessionParsed.push({ "folderName": allFoldersName[i], "folderContent": contentObjects })
+    }
+    
+    console.log('======>>> sessionParsed3: ', sessionParsed)
 
     // save json in local storage
     localStorage.setItem('saveShortcuts', JSON.stringify(sessionParsed))
@@ -65,7 +74,6 @@ function appendDiv (folderName, contentNamesArray, contentUrlsArray)   {
     for (let i=0; i < contentNamesArray.length; i++){
         contentConstructor = contentConstructor + `<a target="_blank" class="shortcutContentLink" href="${contentUrlsArray[i]}">${ contentNamesArray[i]}</a>`
     }
-
     $(
         `<div class="userShortcut">
             <button class="dropbtn foldername">${folderName}</button>
@@ -73,6 +81,7 @@ function appendDiv (folderName, contentNamesArray, contentUrlsArray)   {
                 ${contentConstructor}
             </div>
         </div>`).insertBefore($('.newShortcutFolder'))
+    saveSession()
 }
 
 function saveNewShortcut () {
@@ -81,7 +90,6 @@ function saveNewShortcut () {
     let allUrls = $( ".input-url" ).map(function(){return this.value})
 
     appendDiv(folderName, allNames, allUrls)
-    saveSession(folderName, allNames, allUrls)
 
     // adjust buttons in layout
     $('.inputsAdded').remove();
